@@ -1,30 +1,27 @@
-#include <stdio.h>
-#include <pthread.h>
-#include <unistd.h>
+#include "../includes/philo.h"
 
-void	*make_coffee(void *data)
+int	check_arg(int argc)
 {
-	printf("Coffee is almost ready...\n");
-	sleep(1);
-	printf("Coffee is ready !\n");
-	return (NULL);
+	if (argc != 5 && argc != 6)
+	{
+		write(2, "Wrong number of arguments\n", 27);
+		return (0);
+	}
+	return (1);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-	pthread_t coffee[200];
-	int	i = 0;
+	t_data	data;
 
-	while (i < 200)
-	{
-		pthread_create(&coffee[i], NULL, &make_coffee, NULL);
-		i++;
-	}
-	i = 0;
-	while (i < 200)
-	{
-		pthread_join(coffee[i], NULL);
-		i++;
-	}
+	data.argc = argc;
+	data.argv = argv;
+	if (!check_arg(argc))
+		return (1);
+	if (!check_input(argv))
+		return (1);
+	if (!init_all(&data))
+		return (1);
+	start_simulation(&data);
 	return (0);
 }

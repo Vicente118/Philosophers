@@ -6,7 +6,7 @@
 /*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 19:10:55 by vdarras           #+#    #+#             */
-/*   Updated: 2024/08/06 11:24:34 by vdarras          ###   ########.fr       */
+/*   Updated: 2024/08/13 21:05:17 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,62 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/types.h>
 # include <sys/time.h>
 # include <pthread.h>
 
+struct	s_data;
+
 typedef struct s_philo
 {
-	pthread_t	thread;
-	int			id;
-	int			eating;
-	int			meals_eaten;
-}
+	pthread_t		thread;
+	int				right_fork;
+	int				is_eating;
+	int				last_meal;
+	int				left_fork;
+	long long		last_meal_time;
+	int				times_eaten;
+	int				id;
+	struct s_data	*data;
+}				t_philo;
 
+typedef struct s_data
+{
+	t_philo			*philos;
+	int				number_philo;
+	int				meals_to_eat; // -1 if not specified
+	int				is_dead;
+	long long		start_time;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_lock;
+	int				argc;
+	char			**argv;
+}				t_data;
+
+
+// UTILS //
+size_t		ft_strlen(const char *str);
+int			ft_atoi(const char *str);
+char		*ft_strtrim(char const *s1, char const *set);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+char		*ft_strdup(const char *source);
+
+// PARSING AND INITALIZATION //
+int			check_arg(int argc);
+int			check_number(char **argv);
+int 		check_input(char **argv);
+int			init_all(t_data *data);
+int			init_data(t_data *data);
+void		init_philo(t_data *data);
+long long	get_time_ms(void);
+
+// SIMULATION //
+
+int			start_simulation(t_data *data);
+void		*check_death(void *arg);
+void 		*philo_routine(void *arg);
+int			check_last_meal(t_data *data);
 #endif
