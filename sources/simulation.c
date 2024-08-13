@@ -76,10 +76,10 @@ void    *check_death(void *arg)
     int i;
     t_data  *data;
 
-    i = 0;
     data = (t_data *) arg;
     while (data->is_dead == 0)
     {
+        i = 0;
         if (check_last_meal(data))
             return (NULL);
         while (i < data->number_philo)
@@ -90,13 +90,13 @@ void    *check_death(void *arg)
                     break ;
                 pthread_mutex_lock(&data->print_lock);
                 printf("%lld %d died\n", get_time_ms() - data->start_time, data->philos[i].id);
-                data->is_dead = 1;
                 pthread_mutex_unlock(&data->print_lock);
+                data->is_dead = 1;
                 return (NULL);
             }
             i++;
         }
-        usleep(100);
+        usleep(1000);
     }
 }
 
