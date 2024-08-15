@@ -46,6 +46,7 @@ int check_input(char **argv)
 int init_all(t_data *data)
 {
     if (!init_data(data))
-        return (1);
+        return (0);
     init_philo(data);
+    return (1);
 }

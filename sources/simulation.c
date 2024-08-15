@@ -13,59 +13,17 @@ void *philo_routine(void *arg)
             break;
         }
         // Penser
-        pthread_mutex_lock(&data->print_lock);
-        printf("%lld %d is thinking\n", get_time_ms() - data->start_time, philo->id);
-        pthread_mutex_unlock(&data->print_lock);
-
+        think(data, philo);
         // Prendre les fourchettes
-        if (philo->id % 2 == 0) 
-        {
-            // Philosophe pair : d'abord la fourchette de gauche, puis la droite
-            pthread_mutex_lock(&data->forks[philo->left_fork]);
-            pthread_mutex_lock(&data->print_lock);
-            printf("%lld %d has taken a fork\n", get_time_ms() - data->start_time, philo->id);
-            pthread_mutex_unlock(&data->print_lock);
-
-            pthread_mutex_lock(&data->forks[philo->right_fork]);
-            pthread_mutex_lock(&data->print_lock);
-            printf("%lld %d has taken a fork\n", get_time_ms() - data->start_time, philo->id);
-            pthread_mutex_unlock(&data->print_lock);
-        } 
-        else 
-        {
-            // Philosophe impair : d'abord la fourchette de droite, puis la gauche
-            pthread_mutex_lock(&data->forks[philo->right_fork]);
-            pthread_mutex_lock(&data->print_lock);
-            printf("%lld %d has taken a fork\n", get_time_ms() - data->start_time, philo->id);
-            pthread_mutex_unlock(&data->print_lock);
-
-            pthread_mutex_lock(&data->forks[philo->left_fork]);
-            pthread_mutex_lock(&data->print_lock);
-            printf("%lld %d has taken a fork\n", get_time_ms() - data->start_time, philo->id);
-            pthread_mutex_unlock(&data->print_lock);
-        }
-
+        if (philo->id % 2 == 0)
+            usleep(100);
+        take_fork(data, philo, &data->forks[philo->right_fork], &data->forks[philo->left_fork]);
         // Manger
-        pthread_mutex_lock(&data->print_lock);
-        philo->is_eating = 1;
-        printf("%lld %d is eating\n", get_time_ms() - data->start_time, philo->id);
-        pthread_mutex_unlock(&data->print_lock);
-
-        philo->last_meal_time = get_time_ms();
-        usleep(data->time_to_eat * 1000);  // Convertir en microsecondes
-        philo->is_eating == 0;
-        philo->times_eaten++;
-
+        eat(data, philo);
         // Relâcher les fourchettes
-        pthread_mutex_unlock(&data->forks[philo->left_fork]);
-        pthread_mutex_unlock(&data->forks[philo->right_fork]);
-
+        release_fork(data, philo);
         // Dormir
-        pthread_mutex_lock(&data->print_lock);
-        printf("%lld %d is sleeping\n", get_time_ms() - data->start_time, philo->id);
-        pthread_mutex_unlock(&data->print_lock);
-        usleep(data->time_to_sleep * 1000);
-
+        philo_sleep(data, philo);
         // Vérifier si le nombre minimal de repas a été atteint
     }
     return (NULL);
@@ -98,6 +56,7 @@ void    *check_death(void *arg)
         }
         usleep(1000);
     }
+    return (NULL);
 }
 
 int check_last_meal(t_data *data)

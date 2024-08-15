@@ -6,7 +6,7 @@
 /*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 19:10:55 by vdarras           #+#    #+#             */
-/*   Updated: 2024/08/13 21:05:17 by vdarras          ###   ########.fr       */
+/*   Updated: 2024/08/15 14:25:00 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				right_fork;
+	int				left_fork;
 	int				is_eating;
 	int				last_meal;
-	int				left_fork;
 	long long		last_meal_time;
 	int				times_eaten;
 	int				id;
@@ -47,6 +47,7 @@ typedef struct s_data
 	long long		time_to_sleep;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t lock;
 	int				argc;
 	char			**argv;
 }				t_data;
@@ -68,10 +69,20 @@ int			init_data(t_data *data);
 void		init_philo(t_data *data);
 long long	get_time_ms(void);
 
+// ACTIONS //
+void		think(t_data *data, t_philo *philo);
+void		eat(t_data *data, t_philo *philo);
+void		philo_sleep(t_data *data, t_philo *philo);
+void		take_fork(t_data *data, t_philo *philo, pthread_mutex_t *fork1, pthread_mutex_t *fork2);
+void		release_fork(t_data *data, t_philo *philo);
+
 // SIMULATION //
 
 int			start_simulation(t_data *data);
 void		*check_death(void *arg);
 void 		*philo_routine(void *arg);
 int			check_last_meal(t_data *data);
+
+// CLEAR //
+void	destroy_mutex_and_free(t_data *data);
 #endif

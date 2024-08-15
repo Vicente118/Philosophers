@@ -9,7 +9,7 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Werror -Wall -Wextra
+CFLAGS = -Werror -Wall -Wextra -fsanitize=thread
 
 RM = rm -rf
 
@@ -17,7 +17,8 @@ SRCS_DIR = ./sources/
 OBJS_DIR = ./objects/
 
 SRCS = sources/main.c sources/parsing.c sources/ft_atoi.c sources/ft_strtrim.c \
-	   sources/utils_libft.c sources/init.c sources/simulation.c 
+	   sources/utils_libft.c sources/init.c sources/simulation.c sources/actions.c \
+	   sources/clear.c \
 
 OBJS = $(SRCS:$(SRCS_DIR)%.c=$(OBJS_DIR)%.o)
 
@@ -34,12 +35,12 @@ $(NAME) : $(OBJS)
 	@echo "\033[0;31m██║      ██║  ██║ ██║ ███████╗ ╚██████╔╝ ███████║ ╚██████╔╝ ██║      ██║  ██║ ███████╗ ██║  ██║ ███████║"
 	@echo "\033[0;31m╚═╝      ╚═╝  ╚═╝ ╚═╝ ╚══════╝  ╚═════╝  ╚══════╝  ╚═════╝  ╚═╝      ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝ ╚══════╝"
 	@echo "                                                                                                                  "                                                                                         
-	@$(CC) -pthread $(OBJS) -o $(NAME)
+	@$(CC) -pthread -g $(OBJS) -o $(NAME)
 
 $(OBJS_DIR)%.o : $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)/sources
-	@$(CC) -pthread -o $@ -c $<
+	@$(CC) -pthread -g -o $@ -c $<
 
 clean :
 	@$(RM) obj/**/*.o

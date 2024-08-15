@@ -1,5 +1,11 @@
 #include "../includes/philo.h"
 
+void	one_philo(t_data *data)
+{
+	printf("0 1 has taken a fork\n");
+	printf("%lld 1 died\n", data->time_to_die);
+}
+
 int	check_arg(int argc)
 {
 	if (argc != 5 && argc != 6)
@@ -22,6 +28,12 @@ int main(int argc, char **argv)
 		return (1);
 	if (!init_all(&data))
 		return (1);
-	start_simulation(&data);
-	return (0);
+	if (data.number_philo == 1)
+	{
+		one_philo(&data);
+		return (destroy_mutex_and_free(&data), 0);
+	}
+	if (!start_simulation(&data))
+		return (destroy_mutex_and_free(&data), 1);
+	return (destroy_mutex_and_free(&data), 0);
 }
