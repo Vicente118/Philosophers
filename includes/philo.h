@@ -6,7 +6,7 @@
 /*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 19:10:55 by vdarras           #+#    #+#             */
-/*   Updated: 2024/08/15 14:25:00 by vdarras          ###   ########.fr       */
+/*   Updated: 2024/08/15 19:32:53 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ typedef struct s_data
 	long long		time_to_sleep;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	dead_mutex;
+	pthread_mutex_t	is_eating;
 	pthread_mutex_t lock;
 	int				argc;
 	char			**argv;
@@ -59,6 +61,7 @@ int			ft_atoi(const char *str);
 char		*ft_strtrim(char const *s1, char const *set);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strdup(const char *source);
+void		ft_usleep(long int time_in_ms);
 
 // PARSING AND INITALIZATION //
 int			check_arg(int argc);

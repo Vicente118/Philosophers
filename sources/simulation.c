@@ -1,12 +1,25 @@
 #include "../includes/philo.h"
 
+void	ft_usleep(long int time_in_ms)
+{
+	long int	start_time;
+
+	start_time = 0;
+	start_time = get_time_ms();
+	while ((get_time_ms() - start_time) < time_in_ms)
+		usleep(time_in_ms / 10);
+}
 void *philo_routine(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
     t_data *data = philo->data;
 
-    while (!data->is_dead) 
+    while (1) 
     {
+        if (data->is_dead == 1)
+        {
+            break ;
+        }
         if (data->meals_to_eat != -1 && philo->times_eaten >= data->meals_to_eat)
         {
             philo->last_meal = 1; 
@@ -24,40 +37,39 @@ void *philo_routine(void *arg)
         release_fork(data, philo);
         // Dormir
         philo_sleep(data, philo);
-        // Vérifier si le nombre minimal de repas a été atteint
     }
-    return (NULL);
+    return NULL;
 }
 
-void    *check_death(void *arg)
-{
-    int i;
-    t_data  *data;
 
-    data = (t_data *) arg;
-    while (data->is_dead == 0)
+void *check_death(void *arg)
+{
+    t_data *data = (t_data *) arg;
+
+    while (1) 
     {
-        i = 0;
-        if (check_last_meal(data))
-            return (NULL);
-        while (i < data->number_philo)
+        if (data->is_dead == 1)
+        {
+            break ;
+        }
+        for (int i = 0; i < data->number_philo; i++)
         {
             if (get_time_ms() - data->philos[i].last_meal_time > data->time_to_die)
             {
-                if (data->philos[i].is_eating == 1)
-                    break ;
-                pthread_mutex_lock(&data->print_lock);
+                if (data->philos[i].is_eating == 1) 
+                {
+                    break;
+                }
                 printf("%lld %d died\n", get_time_ms() - data->start_time, data->philos[i].id);
-                pthread_mutex_unlock(&data->print_lock);
                 data->is_dead = 1;
-                return (NULL);
+                return NULL;
             }
-            i++;
         }
-        usleep(1000);
+        usleep(100);
     }
-    return (NULL);
+    return NULL;
 }
+
 
 int check_last_meal(t_data *data)
 {
