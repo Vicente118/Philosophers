@@ -48,7 +48,7 @@ typedef struct s_data
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	dead_mutex;
-	pthread_mutex_t	is_eating;
+	pthread_mutex_t	eat_mutex;
 	pthread_mutex_t lock;
 	int				argc;
 	char			**argv;

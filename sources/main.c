@@ -3,6 +3,7 @@
 void	one_philo(t_data *data)
 {
 	printf("0 1 has taken a fork\n");
+	ft_usleep(data->time_to_die);
 	printf("%lld 1 died\n", data->time_to_die);
 }
 

@@ -31,7 +31,7 @@ int init_data(t_data *data)
             return (write(2, "Error mutex init\n", 18), 0);
     }
     if (pthread_mutex_init(&data->print_lock, NULL) || pthread_mutex_init(&data->lock, NULL) 
-        || pthread_mutex_init(&data->dead_mutex, NULL))
+        || pthread_mutex_init(&data->dead_mutex, NULL) || pthread_mutex_init(&data->eat_mutex, NULL))
         return (write(2, "Error mutex init\n", 18), 0);
     data->start_time = get_time_ms();
     return (1);
