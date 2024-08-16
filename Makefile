@@ -35,12 +35,12 @@ $(NAME) : $(OBJS)
 	@echo "\033[0;31m██║      ██║  ██║ ██║ ███████╗ ╚██████╔╝ ███████║ ╚██████╔╝ ██║      ██║  ██║ ███████╗ ██║  ██║ ███████║"
 	@echo "\033[0;31m╚═╝      ╚═╝  ╚═╝ ╚═╝ ╚══════╝  ╚═════╝  ╚══════╝  ╚═════╝  ╚═╝      ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝ ╚══════╝"
 	@echo "                                                                                                                  "                                                                                         
-	@$(CC) -pthread -g -fsanitize=thread $(OBJS) -o $(NAME)
+	@$(CC) -pthread -g $(OBJS) -o $(NAME)
 
 $(OBJS_DIR)%.o : $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)/sources
-	@$(CC) -pthread -g -fsanitize=thread -o $@ -c $<
+	@$(CC) -pthread -g -o $@ -c $<
 
 clean :
 	@$(RM) obj/**/*.o
